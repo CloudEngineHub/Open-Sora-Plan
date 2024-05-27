@@ -16,7 +16,7 @@
 - 代码：所有训练脚本和采样代码。
 - 模型：包括扩散模型和CausalVideoVAE [这里](https://huggingface.co/LanguageBind/Open-Sora-Plan-v1.0.0)。
 - 数据：所有原视频和对应描述 [这里](https://huggingface.co/datasets/LanguageBind/Open-Sora-Plan-v1.0.0)。
-
+  
 ## 效果
 
 Open-Sora-Plan v1.0.0支持图片视频联合训练。我们在此展示视频和图片的重建以及生成：
@@ -70,7 +70,7 @@ https://github.com/PKU-YuanGroup/Open-Sora-Plan/assets/62638829/37e3107e-56b3-4b
 ### 数据构建
 我们定义高质量的视频数据集包括两个核心法则：(1) 没有与内容无关的水印。(2) 高质量的文本注释。
 
-**对于法则1**，我们从开源网站（CC0协议）爬取了大约40k videos：1244个来自[mixkit](https://mixkit.co/)，7,408个来自[pexels](https://www.pexels.com/)，31,617个来自[pixabay](https://pixabay.com/)。我们根据[Panda70M](https://github.com/snap-research/Panda-70M/blob/main/splitting/README.md)提供的场景变换剪切script将这些视频切成大约434k video clips。事实上，根据我们的剪切结果，从这些网上上爬取的99%的视频都是单一的场景。另外，我们发现爬取的数据中超过60%为landscape video。
+**对于法则1**，我们从开源网站（CC0协议）爬取了大约40k videos：1234个来自[mixkit](https://mixkit.co/)，7408个来自[pexels](https://www.pexels.com/)，31616个来自[pixabay](https://pixabay.com/)。我们根据[Panda70M](https://github.com/snap-research/Panda-70M/blob/main/splitting/README.md)提供的场景变换剪切script将这些视频切成大约434k video clips。事实上，根据我们的剪切结果，从这些网上上爬取的99%的视频都是单一的场景。另外，我们发现爬取的数据中超过60%为风景相关视频。更多细节可以在[这](https://github.com/PKU-YuanGroup/Open-Sora-Dataset)找到。
 
 **对于法则2**，很难有大量的高质量的文本注释能够从网上直接爬取。因此我们用成熟的图片标注模型来获取高质量的稠密描述。我们对2个多模态大模型进行消融实验：[ShareGPT4V-Captioner-7B](https://github.com/InternLM/InternLM-XComposer/blob/main/projects/ShareGPT4V/README.md) 和 [LLaVA-1.6-34B](https://github.com/haotian-liu/LLaVA)。前者是专门用来制作文本注释的模型，而后者是一个通用的多模态大模型。经过我们的消融实验，他们在caption的表现差不多。然而他们的推理速度在A800上差距很大：40s/it of batch size of 12 for ShareGPT4V-Captioner-7B，15s/it of batch size of 1 for ShareGPT4V-Captioner-7B。我们开源所有的[文本注释和原视频](https://huggingface.co/datasets/LanguageBind/Open-Sora-Plan-v1.0.0)。
 
@@ -86,7 +86,7 @@ https://github.com/PKU-YuanGroup/Open-Sora-Plan/assets/62638829/37e3107e-56b3-4b
 |---|---|---|---|---|
 | 训练视频尺寸 | 17×256×256 |  65×256×256 | 65×512×512 |  65×1024×1024 | 
 | 计算资源 (#A800 GPU x #小时) | 32 × 40 |  32 × 18 |  32 × 6 |  训练中 | 
-| 权重 | [HF](https://huggingface.co/LanguageBind/Open-Sora-Plan-v1.0.0/tree/main/17x256x256) | [HF](https://huggingface.co/LanguageBind/Open-Sora-Plan-v1.0.0/tree/main/65x256x256) |  [HF](https://huggingface.co/LanguageBind/Open-Sora-Plan-v1.0.0/tree/main/65x512x512) |  Under training | 
+| 权重 | [HF](https://huggingface.co/LanguageBind/Open-Sora-Plan-v1.0.0/tree/main/17x256x256) | [HF](https://huggingface.co/LanguageBind/Open-Sora-Plan-v1.0.0/tree/main/65x256x256) |  [HF](https://huggingface.co/LanguageBind/Open-Sora-Plan-v1.0.0/tree/main/65x512x512) |  训练中 | 
 | 日志 | [wandb](https://api.wandb.ai/links/linbin/p6n3evym) |  [wandb](https://api.wandb.ai/links/linbin/t2g53sew) |  [wandb](https://api.wandb.ai/links/linbin/uomr0xzb) | 训练中 | 
 | 训练数据 | ~40k videos |  ~40k videos |  ~40k videos |  ~40k videos | 
 

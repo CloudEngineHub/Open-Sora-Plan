@@ -1,4 +1,3 @@
-from opensora.npu_config import npu_config
 from ..modeling_videobase import VideoBaseAE
 import torch
 from torch import nn, Tensor
@@ -204,20 +203,10 @@ class CausalConv3d(nn.Module):
         self.conv = nn.Conv3d(chan_in, chan_out, kernel_size, stride = stride, **kwargs)
 
     def forward(self, x):
-        def prepare(x):
-            x = F.pad(x, self.padding)
-            first_frame_pad = x[:, :, :1, : ,:].repeat((1,1,self.time_kernel_size - 1,1,1))
-            x = torch.concatenate((first_frame_pad, x), dim=2)
-            return x
-
-        if npu_config.on_npu:
-            x_dtype = x.dtype
-            x = x.to(torch.float16)
-            x = prepare(x)
-            return npu_config.run_with_dtype(self.conv, x, torch.float16, x_dtype)
-        else:
-            x = prepare(x)
-            return self.conv(x)
+        x = F.pad(x, self.padding)
+        first_frame_pad = x[:, :, :1, : ,:].repeat((1,1,self.time_kernel_size - 1,1,1))
+        x = torch.concatenate((first_frame_pad, x), dim=2)
+        return self.conv(x)
 
 # Modified from https://github.com/wilson1yan/VideoGPT
 class AxialBlock(nn.Module):

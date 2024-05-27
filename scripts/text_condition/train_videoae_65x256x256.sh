@@ -16,7 +16,7 @@ accelerate launch \
     --max_image_size 256 \
     --gradient_checkpointing \
     --attention_mode xformers \
-    --train_batch_size=1 \
+    --train_batch_size=4 \
     --dataloader_num_workers 10 \
     --gradient_accumulation_steps=1 \
     --max_train_steps=1000000 \
@@ -28,7 +28,7 @@ accelerate launch \
     --checkpointing_steps=500 \
     --output_dir="t2v-f65-256-img4-videovae488-bf16-ckpt-xformers-bs4-lr2e-5-t5" \
     --allow_tf32 \
-    --pretrained stage1/diffusion_pytorch_model.safetensors \
+    --pretrained t2v-f17-256-img4-videovae488-bf16-ckpt-xformers-bs4-lr2e-5-t5/checkpoint-86000/model/diffusion_pytorch_model.safetensors \
     --use_deepspeed \
     --model_max_length 300 \
     --use_image_num 4 \

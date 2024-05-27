@@ -21,7 +21,6 @@ from diffusers.models.activations import GEGLU, GELU, ApproximateGELU
 from dataclasses import dataclass
 
 from opensora.models.diffusion.utils.pos_embed import get_2d_sincos_pos_embed
-from opensora.npu_config import npu_config
 
 if is_xformers_available():
     import xformers
@@ -147,12 +146,7 @@ class PatchEmbed(nn.Module):
     def forward(self, latent):
         height, width = latent.shape[-2] // self.patch_size, latent.shape[-1] // self.patch_size
 
-        if npu_config.on_npu:
-            latent = self.proj(latent)
-            latent = npu_config.npu_format_cast(latent)
-        else:
-            latent = self.proj(latent)
-
+        latent = self.proj(latent)
         if self.flatten:
             latent = latent.flatten(2).transpose(1, 2)  # BCHW -> BNC
         if self.layer_norm:
